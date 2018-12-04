@@ -8,6 +8,7 @@ class Piece{
         } type;
         const bool white;
         Piece(Type type, int x, int y, bool white);
+        virtual ~Piece();
         virtual bool canMove(int x, int y) = 0;
         virtual bool canAttack(int x, int y) = 0;
         int getX();

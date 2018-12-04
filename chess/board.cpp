@@ -1,8 +1,14 @@
 #include "board.h"
-#include "pawn.h"
-#include "knight.h"
-#include "queen.h"
-#include "king.h"
+
+#include <iostream>
+
+Board::Board()
+{
+    for(int i = 0; i < MAX_N_PIECES; i++)
+    {
+        pieces[i] = NULL;
+    }
+}
 
 Board::~Board()
 {
@@ -19,7 +25,7 @@ Piece* Board::getPiece(int x, int y)
     {
         return pieces[i];
     }
-    return nullptr;
+    return NULL;
 }
 
 bool Board::removePiece(int x, int y)
@@ -37,7 +43,7 @@ bool Board::removePiece(int i)
     if(i >= 0)
     {
         delete pieces[i];
-        pieces[i] = nullptr;
+        pieces[i] = NULL;
         return true;
     }
     return false;
@@ -47,7 +53,7 @@ bool Board::addPiece(Piece::Type type, int x, int y, bool white)
 {
     if(getPieceId(x, y) == -1)
     {
-        int i = getPieceId(nullptr);
+        int i = getPieceId(NULL);
         if(i >= 0)
         {
             switch(type)
@@ -67,9 +73,8 @@ bool Board::addPiece(Piece::Type type, int x, int y, bool white)
             case Piece::QUEEN:
                 pieces[i] = new Queen(x, y, white);
                 break;
-            case Piece::KING:
+            default:
                 pieces[i] = new King(x, y, white);
-                break;
             }
             return true;
         }
@@ -81,9 +86,9 @@ int Board::getPieceId(int x, int y)
 {
     for(int i = 0; i < MAX_N_PIECES; i++)
     {
-        if(pieces[i] != nullptr)
+        if(pieces[i] != NULL)
         {
-            if(pieces[i]->getX() == x && pieces[i]->getY())
+            if(pieces[i]->getX() == x && pieces[i]->getY() == y)
             {
                 return i;
             }
@@ -104,4 +109,49 @@ int Board::getPieceId(Piece* piece)
     return -1;
 }
 
-
+void Board::print()
+{
+    for(int i = 8; i >= 0; i--)
+    {
+        for(int j = 1; j <= 8; j++)
+        {
+            Piece* p = getPiece(j, i);
+            if(p == NULL)
+            {
+                std::cout << '-';
+            }
+            else
+            {
+                char c;
+                switch(p->type)
+                {
+                case Piece::PAWN:
+                    c = 'P';
+                    break;
+                case Piece::KNIGHT:
+                    c = 'N';
+                    break;
+                case Piece::BISHOP:
+                    c = 'B';
+                    break;
+                case Piece::ROOK:
+                    c = 'R';
+                    break;
+                case Piece::QUEEN:
+                    c = 'Q';
+                    break;
+                default:
+                    c = 'K';
+                    break;
+                }
+                if(p->white)
+                {
+                    c += 'a' - 'A';
+                }
+                std::cout << c;
+            }
+            std::cout << ' ';
+        }
+        std::cout << '\n';
+    }
+}
